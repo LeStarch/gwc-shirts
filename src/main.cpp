@@ -12,10 +12,10 @@
 void loop() {
 	//Grab the start time in microseconds
 	unsigned long start = micros();
-	//Run all the functions
+	//Run all the function wrapper classes
 	for (unsigned int i = 0; i < NUM_ELEMENTS(OUTPUT_LEDS); i++)
 	{
-		FUNC_LEDS[i](OUTPUT_LEDS[i]);
+		FUNC_LEDS[i]->run(OUTPUT_LEDS[i]);
 	}
 	//Calculate the time elapsed and if less than 1ms (1000 microseconds)
 	//then wait, otherwise loop immediately
@@ -29,8 +29,8 @@ void loop() {
 /**
  * Setup:
  *
- * Sets up the arduino functions needed during the loop. This basically amounts to setting  pin
- * modes, setting up the I2C device etc.
+ * Sets up the Arduino functions needed during the loop. This basically amounts to setting  pin
+ * modes.
  */
 void setup() {
 	//Loop through all pins defined as output (in array OUTPUT_PINS) and set mode to be "OUTPUT"

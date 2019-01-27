@@ -9,23 +9,28 @@
 
 #ifndef SRC_LILY_H_
 #define SRC_LILY_H_
-
 /*
- * functions.cpp:
- *
- * This file defines the functions used to blink each LED.  It defines the code
+ * This file defines the functors used to blink each LED.  It defines the code
  * which blink various LEDs.
  *
- * Each function is called every millisecond, and thus for each millisecond the
- * function determines if the LED is on or off. Think animation where each frame
+ * Each functor is called every millisecond, and thus for each millisecond the
+ * functor determines if the LED is on or off. Think animation where each frame
  * is a millisecond long. Here each LED step (or frame) is 1-millisecond long.
+ *
+ * What is a functor? A functor is a class that wraps a named function.  This
+ * allows us to treat functions like data, and store them in arrays etc.
+ *
+ * Here each class defines a "run" function, and that "run" function is called
+ * to perform the action.  The "run" functions are the do different things but
+ * are treated the same.  Thus we can get different behavior, but loop over the
+ * functions.
  *
  *  Created on: Jan 26, 2019
  *      Author: lestarch
  */
 #include <Arduino.h>
 
-#define PIN_COUNT 4
+#define PIN_COUNT 5
 
 // Pin assignments. For the shirts we use, pins 2, 12, 7, 9 as LED pins.
 #define PIN_2 2
@@ -39,18 +44,20 @@ class LedFunction;
 //An array to hold the LEDs
 extern int OUTPUT_LEDS[PIN_COUNT];
 //An array to hold the functions on those LEDs
-extern LedFunction& FUNC_LEDS[PIN_COUNT];
-
+extern LedFunction* FUNC_LEDS[PIN_COUNT];
 
 /**
  * LedFunction:
  *
- * A class
+ * A base class. Shows what the custom functors below should look like.
+ *
+ * Specifically, they must override "virtual void run(int pin);"
  */
 class LedFunction {
 	//
-	virtual void run(int pin);
-	virtual ~LedFunction();
+	public:
+		virtual void run(int pin);
+		virtual ~LedFunction();
 };
 
 /**
@@ -61,7 +68,12 @@ class LedFunction {
  * dims the LED
  */
 class Intensity : public LedFunction {
-    void run(int pin);
+	public:
+		Intensity();
+		void run(int pin);
+		virtual ~Intensity();
+	private:
+		int m_count;
 };
 /**
  * Blink Fast:
@@ -71,7 +83,14 @@ class Intensity : public LedFunction {
  * small count will blink fast.
  */
 class BlinkFast : public LedFunction {
-    void run(int pin);
+	public:
+		BlinkFast();
+		void run(int pin);
+		virtual ~BlinkFast();
+	private:
+		//Static variables will persist across function calls
+		int m_count;
+		int m_state;
 };
 
 /**
@@ -82,7 +101,14 @@ class BlinkFast : public LedFunction {
  * large count will blink slow.
  */
 class BlinkSlow : public LedFunction {
-    void run(int pin);
+	public:
+		BlinkSlow();
+		void run(int pin);
+		virtual ~BlinkSlow();
+	private:
+		//Static variables will persist across function calls
+		int m_count;
+		int m_state;
 };
 /**
  * Blink Burst:
@@ -92,7 +118,15 @@ class BlinkSlow : public LedFunction {
  * "bursts" for a number of cycles.
  */
 class BlinkBurst : public LedFunction {
-    void run(int pin);
+	public:
+		BlinkBurst();
+    	void run(int pin);
+    	virtual ~BlinkBurst();
+	private:
+    	int m_count; //50ms blink
+    	int m_long_count; //1000ms envelope
+    	int m_off_time; //For 400ms, remain off
+    	int m_state;
 };
 
 
