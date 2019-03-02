@@ -30,7 +30,7 @@
  */
 #include <Arduino.h>
 
-#define PIN_COUNT 5
+#define PIN_COUNT 1
 
 // Pin assignments. For the shirts we use, pins 2, 12, 7, 9 as LED pins.
 #define PIN_2 2
