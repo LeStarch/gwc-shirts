@@ -12,9 +12,9 @@
 
 //Order of LEDs
 int OUTPUT_LEDS[PIN_COUNT] = {PIN_2, PIN_12, PIN_7, PIN_9, HEALTH};
-
+//PIN_2 is head
+// right tail is PIN_7
+//
 //Order of functions (same as above).
 //CHANGE ME: to assign different behavior to the above pins.
-LedFunction* FUNC_LEDS[PIN_COUNT] = {new BlinkFast(), new BlinkBurst(), new BlinkSlow(), new BlinkBurst(), new BlinkSlow()};
-
-
+LedFunction* FUNC_LEDS[PIN_COUNT] = {new BlinkFast(), new BlinkSlow(), new BlinkSlow(), new BlinkBurst(), new BlinkSlow()};
